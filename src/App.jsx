@@ -16,17 +16,38 @@ export default function App() {
   );
 }
 
+/* <--------------------- Logo component ---------------------> */
+
 function Logo() {
   return <h1>🌴Far Away🧳</h1>;
 }
 
+/* <--------------------- Form component (for adding new items) ---------------------> */
+
 function Form() {
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(e);
+  }
+
   return (
-    <div className="add-form">
+    <form className="add-form" onSubmit={handleSubmit}>
       <h3>✈What do you need for your Trip ?</h3>
-    </div>
+      <select>
+        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+          <option value={num} key={num}>
+            {num}
+          </option>
+        ))}
+      </select>
+
+      <input type="text" placeholder="add Item here..."></input>
+      <button>Add</button>
+    </form>
   );
 }
+
+/* <--------------------- PackingList component (to display the list of items) ---------------------> */
 
 function PackingList() {
   return (
@@ -40,6 +61,8 @@ function PackingList() {
   );
 }
 
+/* <--------------------- Stats component (to display packing statistics) ---------------------> */
+
 function Stats() {
   return (
     <footer className="stats">
@@ -47,6 +70,8 @@ function Stats() {
     </footer>
   );
 }
+
+/* <--------------------- Item component (to display individual items) ---------------------> */
 
 function Item({ item }) {
   //Style to strike through packe items
