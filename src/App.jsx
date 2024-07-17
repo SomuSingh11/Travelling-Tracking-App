@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 /* eslint-disable react/prop-types */
 const initialItems = [
   { id: 1, description: "Passports", quantity: 2, packed: false },
@@ -25,15 +27,36 @@ function Logo() {
 /* <--------------------- Form component (for adding new items) ---------------------> */
 
 function Form() {
+  const [description, setDescription] = useState("");
+  const [quantity, setQuantity] = useState(1);
+
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(e);
+
+    if (!description) return;
+
+    // Creating a new item based on current value of state variables of form
+    const newItem = {
+      description: description,
+      quantity: quantity,
+      packed: false,
+      id: initialItems.length + 1,
+    };
+
+    setQuantity(1);
+    setDescription("");
+
+    //console.log(newItem);
   }
 
   return (
     <form className="add-form" onSubmit={handleSubmit}>
       <h3>✈What do you need for your Trip ?</h3>
-      <select>
+
+      <select
+        value={quantity}
+        onChange={(e) => setQuantity(Number(e.target.value))}
+      >
         {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
           <option value={num} key={num}>
             {num}
@@ -41,7 +64,12 @@ function Form() {
         ))}
       </select>
 
-      <input type="text" placeholder="add Item here..."></input>
+      <input
+        type="text"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="add Item here..."
+      ></input>
       <button>Add</button>
     </form>
   );
