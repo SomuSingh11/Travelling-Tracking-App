@@ -1,18 +1,35 @@
 import { useState } from "react";
 
 /* eslint-disable react/prop-types */
-const initialItems = [
-  { id: 1, description: "Passports", quantity: 2, packed: false },
-  { id: 2, description: "Socks", quantity: 12, packed: false },
-  { id: 3, description: "Brush", quantity: 2, packed: true },
-];
 
 export default function App() {
+  const [items, setItems] = useState([]);
+
+  function handleAddItems(newItem) {
+    setItems((items) => [...items, newItem]);
+  }
+
+  function handleDeleteItems(itemId) {
+    setItems((items) => items.filter((item) => itemId !== item.id));
+  }
+
+  function handleToggleItem(itemId) {
+    setItems((items) =>
+      items.map((item) =>
+        item.id === itemId ? { ...item, packed: !item.packed } : item
+      )
+    );
+  }
+
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <PackingList />
+      <Form onAddItems={handleAddItems} />
+      <PackingList
+        items={items}
+        onDeleteItems={handleDeleteItems}
+        onToggleItems={handleToggleItem}
+      />
       <Stats />
     </div>
   );
@@ -26,7 +43,7 @@ function Logo() {
 
 /* <--------------------- Form component (for adding new items) ---------------------> */
 
-function Form() {
+function Form({ onAddItems }) {
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(1);
 
@@ -37,11 +54,13 @@ function Form() {
 
     // Creating a new item based on current value of state variables of form
     const newItem = {
+      id: Date.now(),
       description: description,
       quantity: quantity,
       packed: false,
-      id: initialItems.length + 1,
     };
+
+    onAddItems(newItem);
 
     setQuantity(1);
     setDescription("");
@@ -77,12 +96,17 @@ function Form() {
 
 /* <--------------------- PackingList component (to display the list of items) ---------------------> */
 
-function PackingList() {
+function PackingList({ items, onDeleteItems, onToggleItems }) {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
-          <Item item={item} key={item.id} />
+        {items.map((item) => (
+          <Item
+            item={item}
+            key={item.id}
+            onDeleteItems={onDeleteItems}
+            onToggleItems={onToggleItems}
+          />
         ))}
       </ul>
     </div>
@@ -101,15 +125,20 @@ function Stats() {
 
 /* <--------------------- Item component (to display individual items) ---------------------> */
 
-function Item({ item }) {
+function Item({ item, onDeleteItems, onToggleItems }) {
   //Style to strike through packe items
   const style = { textDecoration: "line-through" };
   return (
-    <li>
+    <li className={item.packed ? "toogle" : null}>
+      <input
+        type="checkbox"
+        value={item.packed}
+        onChange={() => onToggleItems(item.id)}
+      />
       <span style={item.packed ? style : null}>
         {item.quantity} {item.description}
       </span>
-      <button>🗑️</button>
+      <button onClick={() => onDeleteItems(item.id)}>🗑️</button>
     </li>
   );
 }
