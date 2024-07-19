@@ -13,7 +13,7 @@ A React application to manage your packing list. Users can add, delete, sort, an
 - [Components](#components)
 
 ## Demo
-You can view a live demo of the application :
+You can view a live demo of the application : https://traveltrackingapp.netlify.app/
 ![farAwayDemo](https://github.com/user-attachments/assets/a16b947f-68bf-445a-baa0-6134b5788b95)
 
 
